@@ -1,0 +1,5 @@
+(library
+ (name tokenizer)
+ (libraries base)
+ (preprocess
+  (pps ppx_sexp_conv)))

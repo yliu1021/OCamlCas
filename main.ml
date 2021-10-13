@@ -1,2 +1,1 @@
-let () =
-  Stdio.print_endline "Hello, World!"
+let () = Stdio.print_endline "Hello, World!"

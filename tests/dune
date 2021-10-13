@@ -1,0 +1,4 @@
+(test
+ (name tokenizer_tests)
+ (libraries base stdio tokenizer)
+ (modules ("tokenizer_tests")))
