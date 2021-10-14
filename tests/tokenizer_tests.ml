@@ -22,6 +22,9 @@ let tests =
   [ "3", Result.Ok [ { token = Value "3"; pos = 0 } ]
   ; "3.5", Result.Ok [ { token = Value "3.5"; pos = 0 } ]
   ; ".3", Result.Ok [ { token = Value ".3"; pos = 0 } ]
+  ; "pi", Result.Ok [ { token = Value "pi"; pos = 0 } ]
+  ; "i", Result.Ok [ { token = Value "i"; pos = 0 } ]
+  ; "e", Result.Ok [ { token = Value "e"; pos = 0 } ]
   ; "3.5.6", Result.Error 0
   ; ( "(1)-2"
     , Result.Ok
