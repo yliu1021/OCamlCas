@@ -87,26 +87,21 @@ let get_next_token prev_token chars =
   | _ -> None
 ;;
 
-let rec resolve_keywords repl_state =
-  let keywords = Repl.keywords repl_state in
-  function
+let rec resolve_keywords repl_state = function
   | [] -> []
   | tok :: rem_toks ->
     let rest = resolve_keywords repl_state rem_toks in
     (match tok with
     | { token = Value x; pos } ->
-      if Char.is_alpha @@ String.get x 0 (* repl keywords must start with a letter *)
-      then (
-        match Set.binary_search keywords ~compare:String.compare `First_equal_to x with
-        | None ->
-          let split =
-            List.mapi
-              ~f:(fun i a -> { token = Value (String.of_char a); pos = pos + i })
-              (String.to_list x)
-          in
-          split @ rest
-        | Some _ -> tok :: rest)
-      else tok :: rest
+      (match Repl.keyword_type repl_state x with
+      | Some _ -> tok :: rest
+      | None ->
+        let split =
+          List.mapi
+            ~f:(fun i a -> { token = Value (String.of_char a); pos = pos + i })
+            (String.to_list x)
+        in
+        split @ rest)
     | _ -> tok :: rest)
 ;;
 

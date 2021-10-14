@@ -48,4 +48,20 @@ let keywords =
 
 let init = { keywords }
 let keywords state = Map.key_set state.keywords
-let keyword_type state name = Map.find state.keywords name
+
+let keyword_type state name =
+  match Map.find state.keywords name with
+  | Some t -> Some t
+  | None ->
+    if String.is_empty name
+    then None
+    else (
+      match String.get name 0 with
+      | '-' | '.' | '0' .. '9' ->
+        (try
+           let () = ignore (Float.of_string name) in
+           Some Constant
+         with
+        | _ -> None)
+      | _ -> None)
+;;
