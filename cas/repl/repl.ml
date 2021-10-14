@@ -1,11 +1,14 @@
 open Core_kernel
-module KeywordSet = Set.M (Keyword)
 
-type t = { keywords : KeywordSet.t }
+type keyword_type =
+  | Function
+  | Constant
+
+type t = { keywords : (string, keyword_type, String.comparator_witness) Map.t }
 
 let keywords =
-  Set.of_list
-    (module Keyword)
+  Map.of_alist_exn
+    (module String)
     [ "sin", Function (* trig *)
     ; "cos", Function
     ; "tan", Function
@@ -44,4 +47,5 @@ let keywords =
 ;;
 
 let init = { keywords }
-let keywords x = Set.map (module String) ~f:(fun (name, _) -> name) x.keywords
+let keywords state = Map.key_set state.keywords
+let keyword_type state name = Map.find state.keywords name
