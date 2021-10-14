@@ -87,7 +87,30 @@ let get_next_token prev_token chars =
   | _ -> None
 ;;
 
-let tokenize =
+let rec resolve_keywords repl_state =
+  let keywords = Repl.keywords repl_state in
+  function
+  | [] -> []
+  | tok :: rem_toks ->
+    let rest = resolve_keywords repl_state rem_toks in
+    (match tok with
+    | { token = Value x; pos } ->
+      if Char.is_alpha @@ String.get x 0 (* repl keywords must start with a letter *)
+      then (
+        match Set.binary_search keywords ~compare:String.compare `First_equal_to x with
+        | None ->
+          let split =
+            List.mapi
+              ~f:(fun i a -> { token = Value (String.of_char a); pos = pos + i })
+              (String.to_list x)
+          in
+          split @ rest
+        | Some _ -> tok :: rest)
+      else tok :: rest
+    | _ -> tok :: rest)
+;;
+
+let tokenize ?(repl_state = Repl.init) input_str =
   let rec state_machine prev_token pos = function
     | [] -> Result.Ok []
     | (' ' | '\t') :: chars -> state_machine prev_token (pos + 1) chars
@@ -99,7 +122,8 @@ let tokenize =
         | Result.Error pos -> Result.Error pos
         | Result.Ok lst -> Result.Ok ({ token; pos } :: lst)))
   in
-  Fn.compose (state_machine None 0) String.to_list
+  let open Result in
+  String.to_list input_str |> state_machine None 0 >>| resolve_keywords repl_state
 ;;
 
 let equal a b =

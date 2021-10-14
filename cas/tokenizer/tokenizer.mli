@@ -18,5 +18,5 @@ type t =
   }
 [@@deriving sexp]
 
-val tokenize : string -> (t list, int) result
+val tokenize : ?repl_state:Repl.t -> string -> (t list, int) result
 val equal : token_type -> token_type -> bool

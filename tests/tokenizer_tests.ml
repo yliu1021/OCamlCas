@@ -56,12 +56,16 @@ let tests =
         ; { token = Exponentiate; pos = 1 }
         ; { token = Value "5"; pos = 3 }
         ] )
-  ; ( "a / -b"
+  ; ( "apple / -sin"
     , Result.Ok
         [ { token = Value "a"; pos = 0 }
-        ; { token = Divide; pos = 2 }
-        ; { token = Negate; pos = 4 }
-        ; { token = Value "b"; pos = 5 }
+        ; { token = Value "p"; pos = 1 }
+        ; { token = Value "p"; pos = 2 }
+        ; { token = Value "l"; pos = 3 }
+        ; { token = Value "e"; pos = 4 }
+        ; { token = Divide; pos = 6 }
+        ; { token = Negate; pos = 8 }
+        ; { token = Value "sin"; pos = 9 }
         ] )
   ]
 ;;
