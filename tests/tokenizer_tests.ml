@@ -93,8 +93,8 @@ let () =
       then Stdio.printf "Test: \"%s\" passed\n" test_str
       else (
         Stdio.printf "Test: \"%s\" failed - " test_str;
-        Stdio.printf "Expected: %s " (Sexp.to_string (sexp_of_test_result expected));
-        Stdio.printf "Actual: %s\n" (Sexp.to_string (sexp_of_test_result actual)));
+        Stdio.printf "Expected: %s\n" (Sexp.to_string (sexp_of_test_result expected));
+        Stdio.printf "Actual:   %s\n" (Sexp.to_string (sexp_of_test_result actual)));
       run_tests (if succeeded then num_failed else num_failed + 1) rem_tests
   in
   run_tests 0 tests
