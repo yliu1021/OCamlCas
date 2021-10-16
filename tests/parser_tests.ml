@@ -53,7 +53,7 @@ let () =
   in *)
   let rec run_tests num_failed = function
     | [] ->
-      Stdio.printf "Tests finished\n";
+      Stdio.printf "Tests finished";
       if num_failed > 0
       then (
         Stdio.printf " - %d failed\n" num_failed;
