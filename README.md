@@ -48,3 +48,9 @@ The `parser` and `tokenizer` moduels are used to parse input strings into syntax
 * To add a new function or constant, simply add it into `repl_state.ml` (with the right classification of `Function` or `Constant`), and in the `eval.ml` module, implement how it should be evaluated.
 
 * To add a new gramamr rule, go into `parser.ml` and modify the `get_substitution` function to add a new grammar rule. The available substitutions are defined in `type substitution`. If a new substitution type is added, make sure to implement how it should be matched in the `perform_sub` function (as well as how the resulting syntax tree should be constructed).
+
+## Future Work
+* Support user defined constants and functions
+* Symbolic calculations (partially implemented)
+* Integrate arbitrary precision numbers
+* Expression tree simplifications
