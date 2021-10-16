@@ -14,7 +14,10 @@ let tests =
   [ "3", node "3"
   ; "3 + 24", node "3" +| node "24"
   ; "sin(3)^3 4", (("sin" @@| node "3") **| node "3") *| node "4"
-  ; "3 * max(5 sin(3))", (node "3") *| ("max"@@|((node "5") *| ("sin"@@|(node "3"))))
+  ; "3 * max(5 sin(3))", node "3" *| ("max" @@| (node "5" *| ("sin" @@| node "3")))
+  ; "3 - max(5 / sin(3))", node "3" -| ("max" @@| (node "5" /| ("sin" @@| node "3")))
+  ; "max(3, 5) = 5", "max" @@| node "3" @| node "5" =| node "5"
+  ; "3 - -5", (node "3") -| (-/)(node "5")
   ]
 ;;
 
