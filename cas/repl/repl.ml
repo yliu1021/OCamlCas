@@ -9,7 +9,17 @@ type t = { keywords : (string, keyword_type, String.comparator_witness) Map.t }
 let keywords =
   Map.of_alist_exn
     (module String)
-    [ "sin", Function (* trig *)
+    [ "sqrt", Function (* roots *)
+    ; "cbrt", Function
+    ; "log", Function (* exp/log *)
+    ; "ln", Function
+    ; "exp", Function
+    ; "max", Function (* max/min *)
+    ; "min", Function
+    ; "e", Constant (* constants *)
+    ; "pi", Constant
+    ; "i", Constant
+    ; "sin", Function (* trig *)
     ; "cos", Function
     ; "tan", Function
     ; "sec", Function
@@ -33,16 +43,6 @@ let keywords =
     ; "asech", Function
     ; "acsch", Function
     ; "acoth", Function
-    ; "log", Function (* exp/log *)
-    ; "ln", Function
-    ; "exp", Function
-    ; "sqrt", Function (* roots *)
-    ; "cbrt", Function
-    ; "max", Function (* max/min *)
-    ; "min", Function
-    ; "e", Constant (* constants *)
-    ; "pi", Constant
-    ; "i", Constant
     ]
 ;;
 
