@@ -15,3 +15,17 @@
  (instrumentation
   (backend bisect_ppx))
  (modules "eval"))
+
+(library
+ (name engine)
+ (libraries base repl_state tokenizer parser expr eval)
+ (preprocess
+  (pps ppx_sexp_conv ppx_compare))
+ (modules "engine"))
+
+(executable
+ (name repl)
+ (libraries stdio engine)
+ (preprocess
+  (pps ppx_sexp_conv ppx_compare))
+ (modules "repl"))
