@@ -2,6 +2,6 @@
  (name tokenizer)
  (libraries base repl)
  (preprocess
-  (pps ppx_sexp_conv))
+  (pps ppx_sexp_conv ppx_compare))
  (instrumentation
   (backend bisect_ppx)))

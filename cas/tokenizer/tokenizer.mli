@@ -1,5 +1,7 @@
 type token_type =
-  | Value of string
+  | Function
+  | Constant
+  | Variable
   | LeftParenthesis
   | RightParenthesis
   | Comma
@@ -10,13 +12,13 @@ type token_type =
   | Divide
   | Exponentiate
   | Negate
-[@@deriving sexp]
+[@@deriving sexp, equal]
 
 type t =
   { token : token_type
   ; pos : int
+  ; value : string
   }
-[@@deriving sexp]
+[@@deriving sexp, equal]
 
 val tokenize : ?repl_state:Repl.t -> string -> (t list, int) result
-val equal : token_type -> token_type -> bool

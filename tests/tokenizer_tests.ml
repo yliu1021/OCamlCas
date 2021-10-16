@@ -4,10 +4,8 @@ open Tokenizer
 let rec tokenize_results_match actual expected =
   match actual, expected with
   | [], [] -> true
-  | { token = tok_a; pos = pos_a } :: rem_a, { token = tok_b; pos = pos_b } :: rem_b ->
-    if Tokenizer.equal tok_a tok_b && pos_a = pos_b
-    then tokenize_results_match rem_a rem_b
-    else false
+  | a :: rem_a, b :: rem_b ->
+    if Tokenizer.equal a b then tokenize_results_match rem_a rem_b else false
   | _ -> false
 ;;
 
@@ -19,56 +17,59 @@ let test_results_match actual expected =
 ;;
 
 let tests =
-  [ "3", Result.Ok [ { token = Value "3"; pos = 0 } ]
-  ; "3.5", Result.Ok [ { token = Value "3.5"; pos = 0 } ]
-  ; ".3", Result.Ok [ { token = Value ".3"; pos = 0 } ]
-  ; "pi", Result.Ok [ { token = Value "pi"; pos = 0 } ]
-  ; "i", Result.Ok [ { token = Value "i"; pos = 0 } ]
-  ; "e", Result.Ok [ { token = Value "e"; pos = 0 } ]
+  [ "3", Result.Ok [ { token = Constant; pos = 0; value = "3" } ]
+  ; "3.5", Result.Ok [ { token = Constant; pos = 0; value = "3.5" } ]
+  ; ".3", Result.Ok [ { token = Constant; pos = 0; value = ".3" } ]
+  ; "pi", Result.Ok [ { token = Constant; pos = 0; value = "pi" } ]
+  ; "i", Result.Ok [ { token = Constant; pos = 0; value = "i" } ]
+  ; "e", Result.Ok [ { token = Constant; pos = 0; value = "e" } ]
   ; "3.5.6", Result.Error 0
   ; ( "(1)-2"
     , Result.Ok
-        [ { token = LeftParenthesis; pos = 0 }
-        ; { token = Value "1"; pos = 1 }
-        ; { token = RightParenthesis; pos = 2 }
-        ; { token = Minus; pos = 3 }
-        ; { token = Value "2"; pos = 4 }
+        [ { token = LeftParenthesis; pos = 0; value = "(" }
+        ; { token = Constant; pos = 1; value = "1" }
+        ; { token = RightParenthesis; pos = 2; value = ")" }
+        ; { token = Minus; pos = 3; value = "-" }
+        ; { token = Constant; pos = 4; value = "2" }
         ] )
   ; ( "(35)"
     , Result.Ok
-        [ { token = LeftParenthesis; pos = 0 }
-        ; { token = Value "35"; pos = 1 }
-        ; { token = RightParenthesis; pos = 3 }
+        [ { token = LeftParenthesis; pos = 0; value = "(" }
+        ; { token = Constant; pos = 1; value = "35" }
+        ; { token = RightParenthesis; pos = 3; value = ")" }
         ] )
   ; ( "a + .35"
     , Result.Ok
-        [ { token = Value "a"; pos = 0 }
-        ; { token = Plus; pos = 2 }
-        ; { token = Value ".35"; pos = 4 }
+        [ { token = Variable; pos = 0; value = "a" }
+        ; { token = Plus; pos = 2; value = "+" }
+        ; { token = Constant; pos = 4; value = ".35" }
         ] )
   ; ( "a - -.35"
     , Result.Ok
-        [ { token = Value "a"; pos = 0 }
-        ; { token = Minus; pos = 2 }
-        ; { token = Negate; pos = 4 }
-        ; { token = Value ".35"; pos = 5 }
+        [ { token = Variable; pos = 0; value = "a" }
+        ; { token = Minus; pos = 2; value = "-" }
+        ; { token = Negate; pos = 4; value = "-" }
+        ; { token = Constant; pos = 5; value = ".35" }
         ] )
   ; ( "3**5"
     , Result.Ok
-        [ { token = Value "3"; pos = 0 }
-        ; { token = Exponentiate; pos = 1 }
-        ; { token = Value "5"; pos = 3 }
+        [ { token = Constant; pos = 0; value = "3" }
+        ; { token = Exponentiate; pos = 1; value = "**" }
+        ; { token = Constant; pos = 3; value = "5" }
         ] )
-  ; ( "apple / -sin"
+  ; ( "3^5"
     , Result.Ok
-        [ { token = Value "a"; pos = 0 }
-        ; { token = Value "p"; pos = 1 }
-        ; { token = Value "p"; pos = 2 }
-        ; { token = Value "l"; pos = 3 }
-        ; { token = Value "e"; pos = 4 }
-        ; { token = Divide; pos = 6 }
-        ; { token = Negate; pos = 8 }
-        ; { token = Value "sin"; pos = 9 }
+        [ { token = Constant; pos = 0; value = "3" }
+        ; { token = Exponentiate; pos = 1; value = "^" }
+        ; { token = Constant; pos = 2; value = "5" }
+        ] )
+  ; ( "ap / -sin"
+    , Result.Ok
+        [ { token = Variable; pos = 0; value = "a" }
+        ; { token = Variable; pos = 1; value = "p" }
+        ; { token = Divide; pos = 3; value = "/" }
+        ; { token = Negate; pos = 5; value = "-" }
+        ; { token = Function; pos = 6; value = "sin" }
         ] )
   ]
 ;;
