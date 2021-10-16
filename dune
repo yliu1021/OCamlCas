@@ -1,3 +1,5 @@
 (executable
  (name main)
- (libraries base stdio))
+ (libraries core async repl_state engine)
+ (preprocess
+  (pps ppx_let)))
