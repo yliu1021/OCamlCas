@@ -1,6 +1,6 @@
 (library
  (name parser)
- (libraries base tokenizer stdio)
+ (libraries base tokenizer)
  (preprocess
   (pps ppx_sexp_conv ppx_compare))
  (instrumentation
