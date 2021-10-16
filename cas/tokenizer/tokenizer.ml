@@ -94,9 +94,9 @@ let rec resolve_keywords repl_state = function
     let rest = resolve_keywords repl_state rem_toks in
     (match tok with
     | { token = Function; pos; value } ->
-      (match Repl.keyword_type repl_state value with
-      | Some Repl.Constant -> { token = Constant; pos; value } :: rest
-      | Some Repl.Function -> { token = Function; pos; value } :: rest
+      (match Repl_state.keyword_type repl_state value with
+      | Some Repl_state.Constant -> { token = Constant; pos; value } :: rest
+      | Some Repl_state.Function -> { token = Function; pos; value } :: rest
       | None ->
         let split =
           List.mapi
@@ -107,7 +107,7 @@ let rec resolve_keywords repl_state = function
     | _ -> tok :: rest)
 ;;
 
-let tokenize ?(repl_state = Repl.init) input_str =
+let tokenize ?(repl_state = Repl_state.init) input_str =
   let rec state_machine prev_token pos = function
     | [] -> Result.Ok []
     | (' ' | '\t') :: chars -> state_machine prev_token (pos + 1) chars

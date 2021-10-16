@@ -1,6 +1,6 @@
 (library
  (name tokenizer)
- (libraries base repl)
+ (libraries base repl_state)
  (preprocess
   (pps ppx_sexp_conv ppx_compare))
  (instrumentation

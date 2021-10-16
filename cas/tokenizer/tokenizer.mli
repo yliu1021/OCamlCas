@@ -21,4 +21,4 @@ type t =
   }
 [@@deriving sexp, equal]
 
-val tokenize : ?repl_state:Repl.t -> string -> (t list, int) result
+val tokenize : ?repl_state:Repl_state.t -> string -> (t list, int) result
