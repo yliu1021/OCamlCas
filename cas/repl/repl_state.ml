@@ -15,8 +15,10 @@ let init =
         ; "log", Function (* exp/log *)
         ; "ln", Function
         ; "exp", Function
-        ; "max", Function (* max/min *)
+        ; "max", Function (* max/min/abs/sgn *)
         ; "min", Function
+        ; "abs", Function
+        ; "sgn", Function
         ; "e", Constant (* constants *)
         ; "pi", Constant
         ; "i", Constant
