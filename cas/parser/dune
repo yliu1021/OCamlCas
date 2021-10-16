@@ -1,0 +1,7 @@
+(library
+ (name parser)
+ (libraries base tokenizer stdio)
+ (preprocess
+  (pps ppx_sexp_conv ppx_compare))
+ (instrumentation
+  (backend bisect_ppx)))

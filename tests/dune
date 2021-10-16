@@ -2,3 +2,8 @@
  (name tokenizer_tests)
  (libraries base stdio tokenizer)
  (modules ("tokenizer_tests")))
+
+(test
+ (name parser_tests)
+ (libraries base stdio parser tokenizer)
+ (modules ("parser_tests")))
