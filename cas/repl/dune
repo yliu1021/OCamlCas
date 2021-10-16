@@ -2,4 +2,16 @@
  (name repl_state)
  (libraries base core)
  (preprocess
-  (pps ppx_sexp_conv ppx_compare)))
+  (pps ppx_sexp_conv ppx_compare))
+ (instrumentation
+  (backend bisect_ppx))
+ (modules "repl_state"))
+
+(library
+ (name eval)
+ (libraries base expr)
+ (preprocess
+  (pps ppx_sexp_conv ppx_compare))
+ (instrumentation
+  (backend bisect_ppx))
+ (modules "eval"))
