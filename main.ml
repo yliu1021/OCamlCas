@@ -1,4 +1,4 @@
-open Core
+open Core_kernel
 open Async
 
 let rec process_input client_addr repl_state r w =
