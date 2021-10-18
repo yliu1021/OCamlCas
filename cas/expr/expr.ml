@@ -42,17 +42,17 @@ let rec of_parse_tree =
   | Parser.Leaf x -> Ok (Node Tokenizer.(x.value))
   | Parser.PrefixOp { token; child } ->
     (match Tokenizer.(token.token) with
-    | Negate -> of_parse_tree child >>== ( -/ )
-    | Function -> of_parse_tree child >>== ( @@| ) Tokenizer.(token.value)
+    | Tokenizer.Negate -> of_parse_tree child >>== ( -/ )
+    | Tokenizer.Function -> of_parse_tree child >>== ( @@| ) Tokenizer.(token.value)
     | _ -> Error Tokenizer.(token.pos))
   | Parser.InfixOp { token; left; right } ->
     (match Tokenizer.(token.token) with
-    | Comma -> (of_parse_tree left, of_parse_tree right) >>>= ( @| )
-    | Equals -> (of_parse_tree left, of_parse_tree right) >>>= ( =| )
-    | Plus -> (of_parse_tree left, of_parse_tree right) >>>= ( +| )
-    | Minus -> (of_parse_tree left, of_parse_tree right) >>>= ( -| )
-    | Multiply -> (of_parse_tree left, of_parse_tree right) >>>= ( *| )
-    | Divide -> (of_parse_tree left, of_parse_tree right) >>>= ( /| )
-    | Exponentiate -> (of_parse_tree left, of_parse_tree right) >>>= ( **| )
+    | Tokenizer.Comma -> (of_parse_tree left, of_parse_tree right) >>>= ( @| )
+    | Tokenizer.Equals -> (of_parse_tree left, of_parse_tree right) >>>= ( =| )
+    | Tokenizer.Plus -> (of_parse_tree left, of_parse_tree right) >>>= ( +| )
+    | Tokenizer.Minus -> (of_parse_tree left, of_parse_tree right) >>>= ( -| )
+    | Tokenizer.Multiply -> (of_parse_tree left, of_parse_tree right) >>>= ( *| )
+    | Tokenizer.Divide -> (of_parse_tree left, of_parse_tree right) >>>= ( /| )
+    | Tokenizer.Exponentiate -> (of_parse_tree left, of_parse_tree right) >>>= ( **| )
     | _ -> Error Tokenizer.(token.pos))
 ;;

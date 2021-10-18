@@ -2,4 +2,12 @@
  (name main)
  (libraries core_kernel async repl_state engine)
  (preprocess
-  (pps ppx_let js_of_ocaml-ppx)))
+  (pps ppx_let)))
+
+(env
+ (dev
+  (ocamlopt_flags
+   (:standard -w +42)))
+ (release
+  (ocamlopt_flags
+   (:standard -O3))))
