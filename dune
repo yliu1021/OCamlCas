@@ -2,7 +2,15 @@
  (name main)
  (libraries core_kernel async repl_state engine)
  (preprocess
-  (pps ppx_let)))
+  (pps ppx_let))
+ (modules "main"))
+
+(executable
+ (name repl)
+ (libraries stdio engine)
+ (preprocess
+  (pps ppx_sexp_conv ppx_compare))
+ (modules "repl"))
 
 (env
  (dev
