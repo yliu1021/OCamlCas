@@ -5,6 +5,10 @@ let number pos value =
   Leaf Tokenizer.{ token = Constant; pos; value = Int.to_string value }
 ;;
 
+let comma pos left right =
+  InfixOp { token = Tokenizer.{ token = Comma; pos; value = "," }; left; right }
+;;
+
 let add pos left right =
   InfixOp { token = Tokenizer.{ token = Plus; pos; value = "+" }; left; right }
 ;;
@@ -37,6 +41,8 @@ let tests =
   ; "5^sqrt(1+2)", exp 1 (number 0 5) (sqrt 2 (add 8 (number 7 1) (number 9 2)))
   ; ( "sqrt(3)^sqrt(1+2)"
     , exp 7 (sqrt 0 (number 5 3)) (sqrt 8 (add 14 (number 13 1) (number 15 2))) )
+  ; "1^2^3", exp 1 (number 0 1) (exp 3 (number 2 2) (number 4 3))
+  ; "1, 2, 3", comma 1 (number 0 1) (comma 4 (number 3 2) (number 6 3))
   ]
 ;;
 

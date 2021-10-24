@@ -15,8 +15,8 @@ type t =
 
 type expr_type =
   | ExprBase
-  | ExprEq
   | ExprComma
+  | ExprEq
   | ExprPlusMinus
   | ExprMultDiv
   | ExprNegate
@@ -38,12 +38,12 @@ type substitution =
 [@@deriving sexp]
 
 let get_substitions = function
-  | ExprBase -> [ Promotion ExprEq ]
-  | ExprEq ->
-    [ Promotion ExprComma; InfixSubstitution (ExprComma, Tokenizer.Equals, ExprEq) ]
+  | ExprBase -> [ Promotion ExprComma ]
   | ExprComma ->
+    [ Promotion ExprEq; InfixSubstitution (ExprEq, Tokenizer.Comma, ExprComma) ]
+  | ExprEq ->
     [ Promotion ExprPlusMinus
-    ; InfixSubstitution (ExprComma, Tokenizer.Comma, ExprPlusMinus)
+    ; InfixSubstitution (ExprPlusMinus, Tokenizer.Equals, ExprEq)
     ]
   | ExprPlusMinus ->
     [ Promotion ExprMultDiv
