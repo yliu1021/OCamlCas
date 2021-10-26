@@ -1,11 +1,6 @@
 open Base
 open Expr
 
-let rec to_list = function
-  | Comma (x, y) -> x :: to_list y
-  | x -> [ x ]
-;;
-
 let rec to_float = function
   | Add (x, y) -> to_float x +. to_float y
   | Subtract (x, y) -> to_float x -. to_float y
@@ -24,11 +19,11 @@ let rec to_float = function
   | Apply ("ln", x) -> Float.log @@ to_float x
   | Apply ("exp", x) -> Float.exp @@ to_float x
   | Apply ("max", x) ->
-    (match List.map ~f:to_float (to_list x) with
+    (match List.map ~f:to_float (Expr.to_comma_list x) with
     | [] -> Float.nan
     | num :: rem -> List.fold rem ~init:num ~f:Float.max)
   | Apply ("min", x) ->
-    (match List.map ~f:to_float (to_list x) with
+    (match List.map ~f:to_float (Expr.to_comma_list x) with
     | [] -> Float.nan
     | num :: rem -> List.fold rem ~init:num ~f:Float.min)
   | Apply ("abs", x) -> Float.abs @@ to_float x

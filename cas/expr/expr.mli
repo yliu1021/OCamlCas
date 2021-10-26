@@ -23,3 +23,5 @@ val ( /| ) : t -> t -> t
 val ( **| ) : t -> t -> t
 val ( -/ ) : t -> t
 val of_parse_tree : Parser.t -> (t, int) result
+val to_comma_list : t -> t list
+val to_string : t -> string

@@ -11,13 +11,13 @@ let get_expr str =
 ;;
 
 let tests =
-  [ "3", node "3"
-  ; "3 + 24", node "3" +| node "24"
-  ; "sin(3)^3 4", (("sin" @@| node "3") **| node "3") *| node "4"
-  ; "3 * max(5 sin(3))", node "3" *| ("max" @@| (node "5" *| ("sin" @@| node "3")))
-  ; "3 - max(5 / sin(3))", node "3" -| ("max" @@| (node "5" /| ("sin" @@| node "3")))
-  ; "max(3, 5) = 5", "max" @@| node "3" @| node "5" =| node "5"
-  ; "3 - -5", (node "3") -| (-/)(node "5")
+  [ "3", node "3", "3"
+  ; "3 + 24", node "3" +| node "24", "3 + 24"
+  ; "sin(3)^3 4", (("sin" @@| node "3") **| node "3") *| node "4", "sin(3)^3 * 4"
+  ; "3 * max(5 sin(3))", node "3" *| ("max" @@| (node "5" *| ("sin" @@| node "3"))), "3 * max(5 * sin(3))"
+  ; "3 - max(5 / sin(3))", node "3" -| ("max" @@| (node "5" /| ("sin" @@| node "3"))), "3 - max(5 / sin(3))"
+  ; "max(3, 5) = 5", "max" @@| node "3" @| node "5" =| node "5", "max(3, 5) = 5"
+  ; "3 - -5", (node "3") -| (-/)(node "5"), "3 - -5"
   ]
 ;;
 
@@ -40,12 +40,12 @@ let () =
         Stdio.printf " - %d failed\n" num_failed;
         Caml.exit 1)
       else Stdio.print_endline " - all passed"
-    | (test_str, expected) :: rem_tests ->
+    | (test_str, expected, expected_str) :: rem_tests ->
       (match get_expr test_str with
       | Result.Error pos -> Stdio.printf "Test \"%s\" failed at pos: %d\n" test_str pos
       | Result.Ok actual ->
         let succeeded =
-          if equal expected actual
+          if equal expected actual && String.equal (Expr.to_string actual) expected_str
           then (
             Stdio.printf "Test \"%s\" passed\n" test_str;
             true)
