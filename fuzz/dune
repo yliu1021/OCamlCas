@@ -1,0 +1,4 @@
+(executable
+ (name fuzz)
+ (libraries base stdio crowbar tokenizer parser expr)
+ (ocamlopt_flags (-afl-instrument)))
