@@ -21,5 +21,6 @@ let eval repl_state str =
             ] )
       | Result.Ok expr_tree ->
         let res = Eval.to_float expr_tree in
-        repl_state, `Assoc [ "success", `Bool true; "number", `Float res ]))
+        let number = if Float.is_nan res then `Null else `Float res in
+        repl_state, `Assoc [ "success", `Bool true; "number", number ]))
 ;;
