@@ -1,6 +1,6 @@
 (executable
  (name js_cas)
- (libraries engine js_of_ocaml)
+ (libraries yojson engine js_of_ocaml)
  (modes js)
  (preprocess
   (pps js_of_ocaml-ppx)))

@@ -1,5 +1,6 @@
 open Core_kernel
 open Async
+open Yojson
 
 let rec process_input client_addr repl_state r w =
   Reader.read_line r
@@ -11,7 +12,7 @@ let rec process_input client_addr repl_state r w =
     Writer.flushed w
   | `Ok input_line ->
     let new_repl_state, output = Engine.eval repl_state input_line in
-    Writer.write w output;
+    Writer.write w (Basic.pretty_to_string output);
     Writer.write w "\n";
     Writer.flushed w >>= fun () -> process_input client_addr new_repl_state r w
 ;;

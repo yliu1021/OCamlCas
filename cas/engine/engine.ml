@@ -1,30 +1,25 @@
 open Base
 
-let float_to_string x =
-  let float_chars = Printf.sprintf "%.15f" x |> String.to_list in
-  let rec remove_prefix_zeros = function
-    | [] -> []
-    | '0' :: rem -> remove_prefix_zeros rem
-    | '.' :: rem -> rem
-    | num -> num
-  in
-  let rev_parsed_float = List.rev float_chars |> remove_prefix_zeros in
-  List.rev rev_parsed_float |> String.of_char_list
-;;
+let error msg pos = `Assoc [ "message", `String msg; "position", `Int pos ]
 
 let eval repl_state str =
   match Tokenizer.tokenize ~repl_state str with
   | Result.Error pos ->
-    repl_state, String.concat [ "error: tokenize failed at pos "; Int.to_string pos ]
+    repl_state, `Assoc [ "success", `Bool false; "error", error "failed to tokenize" pos ]
   | Result.Ok tokens ->
     (match Parser.parse tokens with
-    | None -> repl_state, "error: failed to parse tokens"
+    | None ->
+      ( repl_state
+      , `Assoc [ "success", `Bool false; "error", error "failed to parse tokens" (-1) ] )
     | Some parse_tree ->
       (match Expr.of_parse_tree parse_tree with
       | Result.Error pos ->
         ( repl_state
-        , String.concat [ "error: failed to convert token at pos "; Int.to_string pos ] )
+        , `Assoc
+            [ "success", `Bool false
+            ; "error", error "failed to convert AST to expression" pos
+            ] )
       | Result.Ok expr_tree ->
         let res = Eval.to_float expr_tree in
-        repl_state, float_to_string res))
+        repl_state, `Assoc [ "success", `Bool true; "number", `Float res ]))
 ;;
