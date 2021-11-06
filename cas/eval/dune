@@ -1,0 +1,7 @@
+(library
+ (name eval)
+ (libraries base expr)
+ (preprocess
+  (pps ppx_sexp_conv ppx_compare))
+ (instrumentation
+  (backend bisect_ppx)))
