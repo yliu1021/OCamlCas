@@ -169,4 +169,46 @@ and perform_sub = function
     | _ -> None)
 ;;
 
-let parse = parse_as_expr ExprBase
+let tokens_to_ast = parse_as_expr ExprBase
+
+let rec ast_to_expr =
+  let open Expr in
+  let ( >>== ) a f =
+    match a with
+    | Result.Error e -> Result.Error e
+    | Result.Ok x -> Result.Ok (f x)
+  in
+  let ( >>>= ) a f =
+    match a with
+    | Result.Ok x, Result.Ok y -> Result.Ok (f x y)
+    | Result.Error e, _ -> Result.Error e
+    | _, Result.Error e -> Result.Error e
+  in
+  let open Result in
+  function
+  | Leaf x -> Ok (Node Tokenizer.(x.value))
+  | PrefixOp { token; child } ->
+    (match Tokenizer.(token.token) with
+    | Tokenizer.Negate -> ast_to_expr child >>== ( -/ )
+    | Tokenizer.Function -> ast_to_expr child >>== ( @@| ) Tokenizer.(token.value)
+    | _ -> Error Tokenizer.(token.pos))
+  | InfixOp { token; left; right } ->
+    (match Tokenizer.(token.token) with
+    | Tokenizer.Comma -> (ast_to_expr left, ast_to_expr right) >>>= ( @| )
+    | Tokenizer.Equals -> (ast_to_expr left, ast_to_expr right) >>>= ( =| )
+    | Tokenizer.Plus -> (ast_to_expr left, ast_to_expr right) >>>= ( +| )
+    | Tokenizer.Minus -> (ast_to_expr left, ast_to_expr right) >>>= ( -| )
+    | Tokenizer.Multiply -> (ast_to_expr left, ast_to_expr right) >>>= ( *| )
+    | Tokenizer.Divide -> (ast_to_expr left, ast_to_expr right) >>>= ( /| )
+    | Tokenizer.Exponentiate -> (ast_to_expr left, ast_to_expr right) >>>= ( **| )
+    | _ -> Error Tokenizer.(token.pos))
+;;
+
+let parse ?(repl_state = Repl_state.init) str =
+  match Tokenizer.tokenize ~repl_state str with
+  | Result.Error pos -> Result.Error pos
+  | Result.Ok tokens ->
+    (match tokens_to_ast tokens with
+    | None -> Result.Error 0
+    | Some ast -> ast_to_expr ast)
+;;
