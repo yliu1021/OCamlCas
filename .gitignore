@@ -1,3 +1,7 @@
+# Dune
 _build/
 _coverage/
 _fuzz_results/
+
+# IDE
+.vscode/
