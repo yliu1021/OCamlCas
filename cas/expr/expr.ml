@@ -15,15 +15,23 @@ type t =
 
 let node x = Node x
 let apply fn x = Apply (fn, x)
-let ( @@| ) fn x = apply fn x
-let ( @| ) a b = Comma (a, b)
-let ( =| ) a b = Equate (a, b)
-let ( +| ) a b = Add (a, b)
-let ( -| ) a b = Subtract (a, b)
-let ( *| ) a b = Multiply (a, b)
-let ( /| ) a b = Divide (a, b)
-let ( **| ) a b = Exponentiate (a, b)
-let ( -/ ) a = Negate a
+let comma a b = Comma (a, b)
+let equate a b = Equate (a, b)
+let add a b = Add (a, b)
+let sub a b = Subtract (a, b)
+let mul a b = Multiply (a, b)
+let div a b = Divide (a, b)
+let exp a b = Exponentiate (a, b)
+let neg a = Negate a
+let ( #> ) = apply
+let ( @ ) = comma
+let ( = ) = equate
+let ( + ) = add
+let ( - ) = sub
+let ( * ) = mul
+let ( / ) = div
+let ( ** ) = exp
+let ( -! ) = neg
 
 let rec to_comma_list = function
   | Comma (l, r) -> l :: to_comma_list r

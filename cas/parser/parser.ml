@@ -172,7 +172,6 @@ and perform_sub = function
 let tokens_to_ast = parse_as_expr ExprBase
 
 let rec ast_to_expr =
-  let open Expr in
   let ( >>== ) a f =
     match a with
     | Result.Error e -> Result.Error e
@@ -184,23 +183,22 @@ let rec ast_to_expr =
     | Result.Error e, _ -> Result.Error e
     | _, Result.Error e -> Result.Error e
   in
-  let open Result in
   function
-  | Leaf x -> Ok (Node Tokenizer.(x.value))
+  | Leaf x -> Result.Ok (Expr.Node Tokenizer.(x.value))
   | PrefixOp { token; child } ->
     (match Tokenizer.(token.token) with
-    | Tokenizer.Negate -> ast_to_expr child >>== ( -/ )
-    | Tokenizer.Function -> ast_to_expr child >>== ( @@| ) Tokenizer.(token.value)
+    | Tokenizer.Negate -> ast_to_expr child >>== Expr.neg
+    | Tokenizer.Function -> ast_to_expr child >>== Expr.apply Tokenizer.(token.value)
     | _ -> Error Tokenizer.(token.pos))
   | InfixOp { token; left; right } ->
     (match Tokenizer.(token.token) with
-    | Tokenizer.Comma -> (ast_to_expr left, ast_to_expr right) >>>= ( @| )
-    | Tokenizer.Equals -> (ast_to_expr left, ast_to_expr right) >>>= ( =| )
-    | Tokenizer.Plus -> (ast_to_expr left, ast_to_expr right) >>>= ( +| )
-    | Tokenizer.Minus -> (ast_to_expr left, ast_to_expr right) >>>= ( -| )
-    | Tokenizer.Multiply -> (ast_to_expr left, ast_to_expr right) >>>= ( *| )
-    | Tokenizer.Divide -> (ast_to_expr left, ast_to_expr right) >>>= ( /| )
-    | Tokenizer.Exponentiate -> (ast_to_expr left, ast_to_expr right) >>>= ( **| )
+    | Tokenizer.Comma -> (ast_to_expr left, ast_to_expr right) >>>= Expr.comma
+    | Tokenizer.Equals -> (ast_to_expr left, ast_to_expr right) >>>= Expr.equate
+    | Tokenizer.Plus -> (ast_to_expr left, ast_to_expr right) >>>= Expr.add
+    | Tokenizer.Minus -> (ast_to_expr left, ast_to_expr right) >>>= Expr.sub
+    | Tokenizer.Multiply -> (ast_to_expr left, ast_to_expr right) >>>= Expr.mul
+    | Tokenizer.Divide -> (ast_to_expr left, ast_to_expr right) >>>= Expr.div
+    | Tokenizer.Exponentiate -> (ast_to_expr left, ast_to_expr right) >>>= Expr.exp
     | _ -> Error Tokenizer.(token.pos))
 ;;
 
