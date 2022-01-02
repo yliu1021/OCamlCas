@@ -1,14 +1,14 @@
 type t =
   | Node of string
-  | Apply of (string * t)
+  | Application of (string * t)
   | Comma of (t * t)
-  | Equate of (t * t)
-  | Add of (t * t)
-  | Subtract of (t * t)
-  | Multiply of (t * t)
-  | Divide of (t * t)
-  | Exponentiate of (t * t)
-  | Negate of t
+  | Equation of (t * t)
+  | Addition of (t * t)
+  | Subtraction of (t * t)
+  | Multiplication of (t * t)
+  | Division of (t * t)
+  | Exponentiation of (t * t)
+  | Negation of t
 [@@deriving sexp, equal]
 
 val node : string -> t

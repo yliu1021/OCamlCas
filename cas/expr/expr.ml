@@ -2,27 +2,27 @@ open Base
 
 type t =
   | Node of string
-  | Apply of (string * t)
+  | Application of (string * t)
   | Comma of (t * t)
-  | Equate of (t * t)
-  | Add of (t * t)
-  | Subtract of (t * t)
-  | Multiply of (t * t)
-  | Divide of (t * t)
-  | Exponentiate of (t * t)
-  | Negate of t
+  | Equation of (t * t)
+  | Addition of (t * t)
+  | Subtraction of (t * t)
+  | Multiplication of (t * t)
+  | Division of (t * t)
+  | Exponentiation of (t * t)
+  | Negation of t
 [@@deriving sexp, equal]
 
 let node x = Node x
-let apply fn x = Apply (fn, x)
+let apply fn x = Application (fn, x)
 let comma a b = Comma (a, b)
-let equate a b = Equate (a, b)
-let add a b = Add (a, b)
-let sub a b = Subtract (a, b)
-let mul a b = Multiply (a, b)
-let div a b = Divide (a, b)
-let exp a b = Exponentiate (a, b)
-let neg a = Negate a
+let equate a b = Equation (a, b)
+let add a b = Addition (a, b)
+let sub a b = Subtraction (a, b)
+let mul a b = Multiplication (a, b)
+let div a b = Division (a, b)
+let exp a b = Exponentiation (a, b)
+let neg a = Negation a
 let ( #> ) = apply
 let ( @ ) = comma
 let ( = ) = equate
@@ -57,7 +57,7 @@ let rec to_string x =
     in
     function
     | Node x -> x, 100
-    | Apply (fn, x) -> fn ^ parenthesize @@ to_string x, 100
+    | Application (fn, x) -> fn ^ parenthesize @@ to_string x, 100
     | Comma (l, r) ->
       let comma_precedence = 10 in
       let cs =
@@ -69,13 +69,13 @@ let rec to_string x =
         |> String.concat ~sep:", "
       in
       cs, comma_precedence
-    | Equate (l, r) -> bin_op 20 `Right " = " l r
-    | Add (l, r) -> bin_op 30 `Left " + " l r
-    | Subtract (l, r) -> bin_op 30 `Left " - " l r
-    | Multiply (l, r) -> bin_op 40 `Left " * " l r
-    | Divide (l, r) -> bin_op 40 `Left " / " l r
-    | Exponentiate (l, r) -> bin_op 50 `Right "^" l r
-    | Negate c ->
+    | Equation (l, r) -> bin_op 20 `Right " = " l r
+    | Addition (l, r) -> bin_op 30 `Left " + " l r
+    | Subtraction (l, r) -> bin_op 30 `Left " - " l r
+    | Multiplication (l, r) -> bin_op 40 `Left " * " l r
+    | Division (l, r) -> bin_op 40 `Left " / " l r
+    | Exponentiation (l, r) -> bin_op 50 `Right "^" l r
+    | Negation c ->
       let negate_precedence = 60 in
       let cstr_raw, cprec = to_string_and_prec c in
       let cstr = if cprec < negate_precedence then parenthesize cstr_raw else cstr_raw in
